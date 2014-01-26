@@ -1,0 +1,146 @@
+#%RAML 0.8
+title: Community Hub
+version: v1.0
+resourceTypes:
+  - collection:
+      get:
+        is: [ paginated ]
+        description: get-<<resourcePathName>>
+        responses:
+          200:
+          403:
+  - entity-collection:
+      get:
+        is: [ paginated ]
+        description: get-<<resourcePathName>>
+        responses:
+          200:
+          403:
+          404:
+  - unnamed-entity:
+      post:
+        description: create-<<resourcePathName>>
+        responses:
+          200:
+          400:
+          403:
+          409:
+  - named-entity:
+      put: 
+        description: create-or-update-<<resourcePathName>>
+        responses:
+          200:
+          400:
+          403:
+          404:
+          409:
+      get: 
+        description: get-<<resourcePathName>>
+        responses:
+          200:
+          404:
+      delete:
+        description: delete-<<resourcePathName>>
+        responses:
+          200:
+          403:
+          404:
+          409:
+  - entity-relation:
+      put:
+        description: replace-<<resourcePathName>>
+        responses:
+          200:
+          400:
+          403:
+          404:
+          409:
+      delete:
+        description: remove-<<resourcePathName>>
+        responses:
+          200:
+          400:
+          403:
+          404:
+      get:
+        is: [ paginated ]
+        description: get-<<resourcePathName>>
+        responses:
+          200:
+          403:
+          404:
+      post:
+        description: add-<<resourcePathName>>
+        responses:
+          200:
+          400:
+          403:
+          404:
+          409:
+traits:
+  - paginated:
+      queryParameters:
+        start:
+          default: 0
+          type: integer
+        count:
+          default: 20
+          type: integer
+      
+
+/communities:
+  displayName: all-communities
+  type: { entity-collection }
+
+/community:
+  displayName: unnamed-community
+  type: { unnamed-entity }
+  /{communityId}:
+    displayName: named-community
+    type: { named-entity }
+    /members:
+      displayName: named-community-members
+      type: { entity-relation }
+    /events:
+      displayName: named-community-events
+      type: { collection }
+      /upcoming:
+        displayName: named-community-upcoming-events
+        type: { collection }
+      /past:
+        displayName: named-community-past-events
+        type: { collection }
+
+/users:
+  displayName: all-users
+  type: { entity-collection }
+/user:
+  displayName: unnamed-user
+  type: { unnamed-entity }
+  /{userId}:
+    displayName: named-user
+    type: { named-entity }
+    /communities:
+      displayName: named-user-communities
+      type: { entity-relation }
+    /events:
+      displayName: named-user-events
+      type: { entity-relation }
+
+/events:
+  displayName: all-events
+  type: { entity-collection }
+/event:
+  displayName: unnamed-event
+  type: { unnamed-entity }
+  /{eventId}:
+    displayName: named-event
+    type: { named-entity }
+    /resource:
+      type: { unnamed-entity }
+      /{resourceId}:
+        type: { named-entity }
+    /attendance:
+      type: { entity-relation }
+  
+
